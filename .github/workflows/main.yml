@@ -28,10 +28,12 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/mosdns-x:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mosdns-x:latest
+
+      - name: Keepalive Workflow
+        uses: gautamkrishnar/keepalive-workflow@v2
