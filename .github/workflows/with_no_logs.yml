@@ -14,13 +14,6 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: Checkout bibicadotnet repo
-        uses: actions/checkout@v3
-        with:
-          repository: bibicadotnet/mosdns-x
-          path: mosdns-x-noip
-          fetch-depth: 0
-      
       - name: Get latest release tag
         id: get_tag
         run: |
@@ -40,6 +33,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          file: ./Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/mosdns-x:${{ steps.get_tag.outputs.tag }}
@@ -49,7 +43,8 @@ jobs:
       - name: Build and push no-IP Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./mosdns-x-noip
+          context: .
+          file: ./Dockerfile.noip
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/mosdns-x:${{ steps.get_tag.outputs.tag }}-noip
