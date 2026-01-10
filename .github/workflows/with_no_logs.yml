@@ -1,4 +1,4 @@
-name: with_no_logs
+name: Build and Push Multi-variant Docker Images
 on:
   schedule:
     - cron: "0 17 * * *"
