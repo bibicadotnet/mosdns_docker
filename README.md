@@ -1,6 +1,7 @@
 # mosdns_docker
-```
+
 compose.yml
+
 ```
 services:
   mosdns-x:
@@ -25,6 +26,19 @@ services:
     networks:
       reverse_proxy:
         ipv4_address: 172.18.0.6
+
+  certbot:
+    image: serversideup/certbot-dns-cloudflare
+    container_name: certbot
+    restart: always
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
+      - CERTBOT_DOMAINS=${CERTBOT_DOMAINS}
+      - CERTBOT_KEY_TYPE=rsa
+    volumes:
+      - ./certbot:/etc/letsencrypt
 
 networks:
   reverse_proxy:
