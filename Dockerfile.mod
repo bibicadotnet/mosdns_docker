@@ -9,10 +9,13 @@ RUN apk add --no-cache curl unzip ca-certificates tzdata && \
     esac && \
     LATEST=$(curl -s https://api.github.com/repos/bibicadotnet/mosdns-x/releases/latest | sed -n 's/.*"tag_name":[[:space:]]*"\([^"]*\)".*/\1/p') && \
     curl -sL "https://github.com/bibicadotnet/mosdns-x/releases/download/${LATEST}/mosdns-linux-${MOSDNS_ARCH}.zip" -o /tmp/mosdns.zip && \
-    unzip -qo /tmp/mosdns.zip -d /usr/local/bin && \
-    chmod +x /usr/local/bin/mosdns && \
+    mkdir -p /home/mosdns-x && \
+    unzip -qo /tmp/mosdns.zip -d /home/mosdns-x && \
+    chmod +x /home/mosdns-x/mosdns && \
     apk del curl unzip && \
     rm -rf /tmp/mosdns.zip /var/cache/apk/*
+
 WORKDIR /home/mosdns-x
-EXPOSE 53/tcp 53/udp 853/tcp 853/udp 8090/tcp 8090/udp
-CMD mkdir -p /home/mosdns-x/config && mosdns start -c /home/mosdns-x/config/config.yaml -d /home/mosdns-x
+EXPOSE 53/tcp 53/udp 443/tcp 443/udp 853/tcp 853/udp 8090/tcp 8090/udp
+
+CMD ["./mosdns", "start", "-c", "/home/mosdns-x/config/config.yaml", "-d", "/home/mosdns-x"]
