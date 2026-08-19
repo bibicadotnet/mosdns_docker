@@ -71,3 +71,13 @@ jobs:
           git config user.email "actions@github.com"
           git commit --allow-empty -m "Built original: ${{ steps.get_tag.outputs.tag }} | mod: ${{ steps.get_tag.outputs.tag_mod }}"
           git push
+
+      # Tạo commit rỗng (để tránh tình huống "there hasn't been activity in this repository for at least 60 days")
+      - name: Create empty commit to keep repo alive
+        if: success() && steps.check.outputs.original == 'true' && steps.check.outputs.mod == 'true'
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add .  # ⭐ Thêm bước này để stage changes (dù là empty)
+          git commit --allow-empty -m "Keep repo active for scheduled workflows"
+          git push
